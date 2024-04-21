@@ -8,7 +8,10 @@ import sqlite3
 import time
 
 
-POLL_INTERVAL_SECONDS = 60  # DB gets updated every minute by default
+# How often to poll the database for new blocked queries. FTL updates the
+# database every minute by default. See https://docs.pi-hole.net/database/ftl/.
+POLL_INTERVAL_SECONDS = 60
+
 POLL_QUERY = """
     SELECT id, timestamp, status, domain, client
     FROM queries
@@ -16,6 +19,7 @@ POLL_QUERY = """
     AND status = 7  -- status 7 means blocked by upstream server.
     ORDER BY id DESC;
 """
+
 LATEST_ENTRY_QUERY = """
     SELECT id
     FROM queries
@@ -57,16 +61,21 @@ def monitor(config, block_callback):
     if not db_path.exists():
         raise MonitorConfigError(f"'{db_path}' not found.")
 
-    logger.info("Monitoring Pi-Hole...")
+    logger.info("Monitoring Pi-Hole for blocks by the upstream DNS server...")
 
     while True:
         try:
             block_rows = _query_for_block_rows(db_path)
             if block_rows:
-                # TODO: handle config.WHITELIST
                 entries = [Entry(*row) for row in block_rows]
-                logger.debug("Entries: %s", entries)
-                block_callback(config, entries)
+                filtered_entries = []
+                for entry in entries:
+                    if entry.domain in config.WHITELIST:
+                        logger.info("Skipping whitelisted domain: %s", entry.domain)
+                        continue
+                    filtered_entries.append(entry)
+                if filtered_entries:
+                    block_callback(config, filtered_entries)
         except Exception:
             logger.exception("Error in monitor loop.")
 
@@ -74,11 +83,16 @@ def monitor(config, block_callback):
 def _query_for_block_rows(db_path):
     with contextlib.closing(sqlite3.connect(db_path)) as conn:
         with contextlib.closing(conn.cursor()) as cursor:
+            # Start by getting the last entry ID in the database, which is an
+            # auto-increment field.
             cursor.execute(LATEST_ENTRY_QUERY)
             row = cursor.fetchone()
+            logger.debug("Latest entry ID: %s", row)
+            time.sleep(POLL_INTERVAL_SECONDS)
             if not row:
                 return []
+            # Now query for any blocked DNS queries with an ID greater than the
+            # last one we saw.
             id_pos = row[0]
-            time.sleep(POLL_INTERVAL_SECONDS)
             cursor.execute(POLL_QUERY, (id_pos,))
             return cursor.fetchall()

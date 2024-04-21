@@ -39,8 +39,9 @@ class Config:
         self.MAIL_RECIPIENTS = self._get("MAIL_RECIPIENTS")
 
         # Don't send notifications for blocked domains listed here.
-        _raw = self._get("WHITELIST")
-        self.WHITELIST = _raw.split(",") if _raw else []
+        raw = self._get("NOTIFIER_WHITELIST")
+        self.WHITELIST = [d.strip() for d in raw.split(",")] if raw else []
+        logger.debug("Whitelist: %s", self.WHITELIST)
 
         # Domain category lookup settings.
         self.CLOUDFLARE_API_KEY = self._get("CLOUDFLARE_API_KEY")
