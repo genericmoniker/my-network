@@ -7,6 +7,7 @@ import json
 import logging
 import smtplib
 
+import lookup
 import mailer
 
 
@@ -19,12 +20,14 @@ def notify(config, entries):
         _add_domain_categories(config, entries)
 
     for entry in entries:
+        entry.client_name = lookup.get_device_name(entry.client)
         request_time = datetime.datetime.fromtimestamp(entry.timestamp)
         logger.info(
-            "Upstream block at %s: %s (%s), client=%s",
+            "Upstream block at %s: %s (%s), client=%s (%s)",
             request_time,
             entry.domain,
             ", ".join(entry.categories) if entry.categories else "unknown",
+            entry.client_name,
             entry.client,
         )
 
@@ -87,7 +90,13 @@ def _render_message_body(entries):
         logger.debug("Entry: %s", entry)
         request_time = datetime.datetime.fromtimestamp(entry.timestamp)
         categories = f"{', '.join(entry.categories)}" if entry.categories else ""
-        print("-", request_time, entry.domain, f"(from {entry.client})", file=buffer)
+        print(
+            "-",
+            request_time,
+            entry.domain,
+            f"(from {entry.client_name} {entry.client})",
+            file=buffer,
+        )
         print("  Categories:", categories, file=buffer)
     print(file=buffer, flush=True)
     body = buffer.getvalue()

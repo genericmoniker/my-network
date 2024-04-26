@@ -39,6 +39,7 @@ services:
     build: pihole-notifier
     volumes:
       - ~/mounts/pihole/etc-pihole:/etc/pihole
+      - ~/mounts/notifier/etc-eero:/etc/eero
     environment:
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_USERNAME=${SMTP_USERNAME}

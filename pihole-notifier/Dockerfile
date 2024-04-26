@@ -14,6 +14,16 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
   rm -rf /var/lib/apt/lists/*
 
 USER appuser
+
+# Create a virtual environment.
+ENV VIRTUAL_ENV=/home/appuser/.venv
+RUN python -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+# Install dependencies.
+COPY --chown=appuser requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
 COPY --chown=appuser . .
 
 ENTRYPOINT ["tini", "--", "python3", "main.py"]

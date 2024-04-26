@@ -36,6 +36,7 @@ class Entry:
     domain: str
     client: str
     categories: list[str] = field(default_factory=list)
+    client_name: str = "unknown"
 
 
 logger = logging.getLogger(__name__)
