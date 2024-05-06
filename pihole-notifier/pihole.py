@@ -53,7 +53,7 @@ def monitor(config, block_callback):
         config (config.Config): The application configuration.
         block_callback (callable): A callback to invoke when a blocked query is
             detected. The callback should accept the configuration and a list of
-            `Entry` named tuples.
+            `Entry` objects.
     """
     if not config.FTL_DB_FILE:
         raise MonitorConfigError("FTL_DB_FILE config value not set.")

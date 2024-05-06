@@ -1,4 +1,4 @@
-# notifier dockerfile
+# pihole-notifier dockerfile
 
 # I think pi-hole is using bullseye, so hopefully some shared layers.
 FROM python:3.12-slim-bullseye
