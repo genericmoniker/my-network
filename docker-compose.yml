@@ -97,9 +97,26 @@ services:
     container_name: inadyn
     environment:
       - TZ=${TZ}
+    restart: unless-stopped
     volumes:
       # This file should be created in advance!
       - ~/mounts/inadyn/inadyn.conf:/etc/inadyn.conf
+
+  # CNM monitor/notifier
+  cnm:
+    image: genericmoniker/cnm-notifier:latest
+    container_name: cnm
+    environment:
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - MAIL_SENDER=${MAIL_SENDER}
+      - MAIL_RECIPIENTS=${MAIL_RECIPIENTS}
+      - CNM_USERNAME=${CNM_USERNAME}
+      - CNM_PASSWORD=${CNM_PASSWORD}
+      - CNM_FIREWALLS=${CNM_FIREWALLS}
+      - TZ=${TZ}
+    restart: unless-stopped
 
 networks:
   wg-easy:
