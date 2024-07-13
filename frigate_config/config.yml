@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=http://kylo.home:5000/api/config/schema.json
+mqtt:
+  enabled: False
+
+detectors:
+  coral:
+    type: edgetpu
+    device: usb
+
+cameras:
+  driveway:
+    enabled: True
+    ffmpeg:
+      inputs:
+        - path: rtsp://{FRIGATE_RTSP_USER_ALERT}:{FRIGATE_RTSP_PASS_ALERT}@192.168.4.220:554/HighResolutionVideo
+          roles:
+            - record
+            - audio
+        - path: rtsp://{FRIGATE_RTSP_USER_ALERT}:{FRIGATE_RTSP_PASS_ALERT}@192.168.4.220:554/LowResolutionVideo
+          roles:
+            - detect
+  porch:
+    enabled: True
+    ffmpeg:
+      inputs:
+        - path: rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.210/stream1
+          roles:
+            - record
+            - audio
+        - path: rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.210/stream2
+          roles:
+            - detect
+      output_args:
+          record: preset-record-generic-audio-copy
+
+    onvif:
+      host: 192.168.4.210
+      port: 2020
+      user: "{FRIGATE_RTSP_USER_TAPO}"
+      password: "{FRIGATE_RTSP_PASS_TAPO}"
+
+record:
+  enabled: True
+  retain:
+    days: 3
+    mode: motion
+  events:
+    retain:
+      default: 30
+      mode: motion

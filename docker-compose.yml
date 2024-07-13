@@ -118,6 +118,34 @@ services:
       - TZ=${TZ}
     restart: unless-stopped
 
+  # Security camera NVR
+  frigate:
+    image: ghcr.io/blakeblackshear/frigate:stable
+    container_name: frigate
+    restart: unless-stopped
+    devices:
+      - /dev/bus/usb:/dev/bus/usb  # Passes the USB Coral
+    environment:
+      - TZ=${TZ}
+      - FRIGATE_RTSP_USER_ALERT=${FRIGATE_RTSP_USER_ALERT}
+      - FRIGATE_RTSP_PASS_ALERT=${FRIGATE_RTSP_PASS_ALERT}
+      - FRIGATE_RTSP_USER_TAPO=${FRIGATE_RTSP_USER_TAPO}
+      - FRIGATE_RTSP_PASS_TAPO=${FRIGATE_RTSP_PASS_TAPO}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./frigate_config:/config         # config is on the host
+      - ~/mounts/frigate:/media/frigate  # media is mounted to the NAS
+      - type: tmpfs
+        target: /tmp/cache
+        tmpfs:
+          size: 1000000000
+    ports:
+      - "5000:5000" # UI
+      - "8554:8554" # RTSP feeds
+      - "8555:8555/tcp" # WebRTC over tcp
+      - "8555:8555/udp" # WebRTC over udp
+
+
 networks:
   wg-easy:
     ipam:
