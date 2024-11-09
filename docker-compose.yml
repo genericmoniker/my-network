@@ -62,7 +62,8 @@ services:
     environment:
       # Server's hostname (clients will connect to):
       - WG_HOST=${WIREGUARD_HOST}
-      - PASSWORD=${WIREGUARD_PASSWORD}
+      # See https://github.com/wg-easy/wg-easy/blob/master/How_to_generate_an_bcrypt_hash.md
+      - PASSWORD_HASH=${WIREGUARD_PASSWORD_HASH}
 
       # 💡 This is the Pi-Hole Container's IP Address
       - WG_DEFAULT_DNS=10.8.1.2
