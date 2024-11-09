@@ -1,0 +1,14 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/service-widgets
+
+- resources:
+    cpu: true
+    cputemp: true
+    memory: true
+    disk: /
+    uptime: true
+
+- search:
+    provider: duckduckgo
+    target: _blank

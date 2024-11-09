@@ -1,0 +1,33 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/services
+
+- Network:
+    - Pi-hole:
+        href: http://pi.hole:5353/
+        icon: pi-hole
+        description: Ad block and DNS
+
+    - WireGuard:
+        href: http://kylo.home:51821
+        icon: wireguard
+        description: VPN
+
+- Applications:
+
+    - Frigate:
+        href: http://kylo.home:5000/
+        icon: frigate
+        description: Home security
+
+    - InfluxDB:
+        href: http://kylo.home:8086/
+        icon: influxdb
+        description: Time-series database
+
+- System:
+    - Dash.:
+        href: http://kylo.home:3001/
+        icon: dashdot
+        description: Server resource utilization
+
