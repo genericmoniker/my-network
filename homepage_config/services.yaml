@@ -20,6 +20,11 @@
         icon: frigate
         description: Home security
 
+    - SyncThing:
+        href: http://kylo.home:8384/
+        icon: syncthing
+        description: File synchronization
+
     - InfluxDB:
         href: http://kylo.home:8086/
         icon: influxdb
