@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=http://kylo.home:5000/api/config/schema.json
 mqtt:
-  enabled: False
+  enabled: false
 
 detectors:
   coral:
@@ -8,19 +8,8 @@ detectors:
     device: usb
 
 cameras:
-  driveway:
-    enabled: True
-    ffmpeg:
-      inputs:
-        - path: rtsp://{FRIGATE_RTSP_USER_ALERT}:{FRIGATE_RTSP_PASS_ALERT}@192.168.4.220:554/HighResolutionVideo
-          roles:
-            - record
-            - audio
-        - path: rtsp://{FRIGATE_RTSP_USER_ALERT}:{FRIGATE_RTSP_PASS_ALERT}@192.168.4.220:554/LowResolutionVideo
-          roles:
-            - detect
   porch:
-    enabled: True
+    enabled: true
     ffmpeg:
       inputs:
         - path: rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.210/stream1
@@ -31,20 +20,28 @@ cameras:
           roles:
             - detect
       output_args:
-          record: preset-record-generic-audio-copy
+        record: preset-record-generic-audio-aac
 
     onvif:
       host: 192.168.4.210
       port: 2020
-      user: "{FRIGATE_RTSP_USER_TAPO}"
-      password: "{FRIGATE_RTSP_PASS_TAPO}"
+      user: '{FRIGATE_RTSP_USER_TAPO}'
+      password: '{FRIGATE_RTSP_PASS_TAPO}'
+
+    zones:
+      Walkway:
+        coordinates: 0.907,0.995,0.589,0.312,0.284,0.222,0.264,0.998
+        loitering_time: 0
 
 record:
-  enabled: True
+  enabled: true
   retain:
     days: 3
     mode: motion
   events:
     retain:
       default: 30
+
       mode: motion
+
+version: 0.14
