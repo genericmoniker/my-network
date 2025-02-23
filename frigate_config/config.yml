@@ -8,6 +8,26 @@ detectors:
     device: usb
 
 cameras:
+  driveway:
+    enabled: true
+    ffmpeg:
+      inputs:
+        - path: rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.176/stream1
+          roles:
+            - record
+            - audio
+        - path: rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.176/stream2
+          roles:
+            - detect
+      output_args:
+        record: preset-record-generic-audio-aac
+
+    onvif:
+      host: 192.168.4.176
+      port: 2020
+      user: '{FRIGATE_RTSP_USER_TAPO}'
+      password: '{FRIGATE_RTSP_PASS_TAPO}'
+
   porch:
     enabled: true
     ffmpeg:
@@ -38,10 +58,10 @@ record:
   retain:
     days: 3
     mode: motion
-  events:
+  alerts:
     retain:
-      default: 30
-
-      mode: motion
-
-version: 0.14
+      days: 30
+  detections:
+    retain:
+      days: 30
+version: 0.15-1
