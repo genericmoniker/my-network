@@ -10,6 +10,9 @@ services:
     volumes:
       - ./homepage_config:/app/config  # inside the repo so we can version
       - /var/run/docker.sock:/var/run/docker.sock # (optional) For docker integrations
+    environment:
+      - TZ=${TZ}
+      - HOMEPAGE_ALLOWED_HOSTS=${HOMEPAGE_ALLOWED_HOSTS}
 
   # Server utilization dashboard
   dash:
@@ -66,7 +69,7 @@ services:
   pihole-notifier:
     depends_on:
       - pihole
-    container_name: pihole-notifier
+    container_name: pihole-notifierf
     build: pihole-notifier
     volumes:
       - ~/mounts/pihole/etc-pihole:/etc/pihole
