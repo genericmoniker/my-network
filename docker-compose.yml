@@ -149,7 +149,7 @@ services:
       - MAIL_RECIPIENTS=${MAIL_RECIPIENTS}
       - CNM_USERNAME=${CNM_USERNAME}
       - CNM_PASSWORD=${CNM_PASSWORD}
-      - CNM_FIREWALLS=${CNM_FIREWALLS}
+      - CNM_NETWORKS=${CNM_NETWORKS}
       - TZ=${TZ}
     restart: unless-stopped
 
