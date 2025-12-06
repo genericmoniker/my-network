@@ -15,6 +15,11 @@
 
 - Applications:
 
+    - immich:
+        href: http://kylo.home:2283/
+        icon: immich
+        description: Photo and video management
+
     - Frigate:
         href: http://kylo.home:5000/
         icon: frigate
