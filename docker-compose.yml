@@ -37,25 +37,19 @@ services:
 
   # Ad block
   # https://github.com/pi-hole/docker-pi-hole
+  # https://docs.pi-hole.net/docker/configuration/
   pihole:
     image: pihole/pihole:latest
     container_name: pihole
 
     environment:
-      - WEBPASSWORD=${PIHOLE_WEBPASSWORD}
-      - ServerIP=${PIHOLE_SERVERIP}   # Address of Pi-hole host
-      - VIRTUAL_HOST=pihole.home.lan
-      - PIHOLE_DNS_1=1.1.1.3  # Cloudflare DNS - No Malware or Adult Content
-      - PIHOLE_DNS_2=1.0.0.3  # Cloudflare DNS - Secondary, No Malware or Adult Content
       - TZ=${TZ}
-
+      - FTLCONF_webserver_api_password=${PIHOLE_WEBPASSWORD}
+      - FTLCONF_LOCAL_IPV4=${PIHOLE_SERVERIP}  # Required for pi.hole hostname resolution
+      - FTLCONF_dns_listeningMode=ALL  # Allow DNS queries from WireGuard clients (10.8.0.x subnet)
+      - FTLCONF_dns_upstreams=9.9.9.9;149.112.112.112  # Quad9 DNS (semicolon-separated)
     volumes:
       - '~/mounts/pihole/etc-pihole:/etc/pihole'
-      - '~/mounts/pihole/etc-dnsmasq.d:/etc/dnsmasq.d'
-    dns:
-      - 127.0.0.1
-      - 1.1.1.3
-      - 1.0.0.3
     ports:
       - "53:53/tcp"
       - "53:53/udp"
@@ -90,6 +84,7 @@ services:
 
   # VPN
   # https://github.com/wg-easy/wg-easy
+  # https://wg-easy.github.io/wg-easy/latest/
   wireguard:
     depends_on:
       - pihole
