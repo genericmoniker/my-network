@@ -10,27 +10,33 @@ detectors:
 # go2rtc is a separate application that is bundled with Frigate. See:
 # https://github.com/AlexxIT/go2rtc
 # Including the configuration here is supposed to make the live view visually
-# better and to enable audio. Stream names should match the camera names so
-# that Frigate can automatically use the go2rtc streams.
+# better and to enable audio.
 go2rtc:
   streams:
-    driveway:
-      - rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.176/stream1
-    porch:
-      - rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.210/stream1
+    porch_1:
+      - "ffmpeg:rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.210/stream1#video=copy#audio=aac"
+      - "ffmpeg:porch_1#audio=opus"
+    porch_2:
+      - rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.210/stream2
+
+    driveway_1:
+      - "ffmpeg:rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.176:554/stream1#video=copy#audio=aac"
+      - "ffmpeg:driveway_1#audio=opus"
+    driveway_2:
+      - rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.176:554/stream2
 
 cameras:
   driveway:
     enabled: true
     ffmpeg:
       inputs:
-        - path:
-            rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.176/stream1
+        - path: rtsp://127.0.0.1:8554/driveway_1
+          input_args: preset-rtsp-restream
           roles:
             - record
             - audio
-        - path:
-            rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.176/stream2
+        - path: rtsp://127.0.0.1:8554/driveway_2
+          input_args: preset-rtsp-restream
           roles:
             - detect
       output_args:
@@ -42,6 +48,13 @@ cameras:
       user: '{FRIGATE_RTSP_USER_TAPO}'
       password: '{FRIGATE_RTSP_PASS_TAPO}'
 
+    detect:
+      width: 640
+      height: 360
+    live:
+      streams:
+        Stream 1: driveway_1
+        Stream 2: driveway_2
   porch:
     enabled: true
     ffmpeg:
@@ -63,7 +76,13 @@ cameras:
       port: 2020
       user: '{FRIGATE_RTSP_USER_TAPO}'
       password: '{FRIGATE_RTSP_PASS_TAPO}'
-
+    detect:
+      width: 640
+      height: 360
+    live:
+      streams:
+        Stream 1: porch_1
+        Stream 2: porch_2
     zones:
       Walkway:
         coordinates: 0.907,0.995,0.589,0.312,0.284,0.222,0.264,0.998
