@@ -14,14 +14,14 @@ detectors:
 go2rtc:
   streams:
     porch_1:
-      - "ffmpeg:rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.210/stream1#video=copy#audio=aac"
-      - "ffmpeg:porch_1#audio=opus"
+      - ffmpeg:rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.210/stream1#video=copy#audio=aac
+      - ffmpeg:porch_1#audio=opus
     porch_2:
       - rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.210/stream2
 
     driveway_1:
-      - "ffmpeg:rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.176:554/stream1#video=copy#audio=aac"
-      - "ffmpeg:driveway_1#audio=opus"
+      - ffmpeg:rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.176:554/stream1#video=copy#audio=aac
+      - ffmpeg:driveway_1#audio=opus
     driveway_2:
       - rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.176:554/stream2
 
@@ -59,12 +59,12 @@ cameras:
     enabled: true
     ffmpeg:
       inputs:
-        - path:
+        - path: 
             rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.210/stream1
           roles:
             - record
             - audio
-        - path:
+        - path: 
             rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.210/stream2
           roles:
             - detect
@@ -103,3 +103,10 @@ record:
 version: 0.18-0
 detect:
   enabled: true
+objects:
+  track:
+    - person
+    - car
+    - dog
+    - motorcycle
+    - bicycle
