@@ -7,16 +7,30 @@ detectors:
     type: edgetpu
     device: usb
 
+# go2rtc is a separate application that is bundled with Frigate. See:
+# https://github.com/AlexxIT/go2rtc
+# Including the configuration here is supposed to make the live view visually
+# better and to enable audio. Stream names should match the camera names so
+# that Frigate can automatically use the go2rtc streams.
+go2rtc:
+  streams:
+    driveway:
+      - rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.176/stream1
+    porch:
+      - rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.210/stream1
+
 cameras:
   driveway:
     enabled: true
     ffmpeg:
       inputs:
-        - path: rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.176/stream1
+        - path:
+            rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.176/stream1
           roles:
             - record
             - audio
-        - path: rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.176/stream2
+        - path:
+            rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.176/stream2
           roles:
             - detect
       output_args:
@@ -32,11 +46,13 @@ cameras:
     enabled: true
     ffmpeg:
       inputs:
-        - path: rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.210/stream1
+        - path:
+            rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.210/stream1
           roles:
             - record
             - audio
-        - path: rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.210/stream2
+        - path:
+            rtsp://{FRIGATE_RTSP_USER_TAPO}:{FRIGATE_RTSP_PASS_TAPO}@192.168.4.210/stream2
           roles:
             - detect
       output_args:
@@ -55,13 +71,16 @@ cameras:
 
 record:
   enabled: true
-  retain:
-    days: 3
-    mode: motion
   alerts:
     retain:
       days: 30
   detections:
     retain:
       days: 30
-version: 0.15-1
+  continuous:
+    days: 0
+  motion:
+    days: 3
+version: 0.18-0
+detect:
+  enabled: true
